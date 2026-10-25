@@ -279,7 +279,10 @@ static void validateAndFixConfig(void)
 
 #if defined(USE_BATTERY_VOLTAGE_SAG_COMPENSATION)
         if (batteryConfig()->voltageMeterSource != VOLTAGE_METER_ADC) {
+            //TODO: fix enable for SITL
+#if !defined(_SIMULATOR_BUILD)
             pidProfilesMutable(i)->vbat_sag_compensation = 0;
+#endif
         }
 #endif
     }
@@ -855,7 +858,9 @@ bool isSystemConfigured(void)
 void setRebootRequired(void)
 {
     rebootRequired = true;
+#ifndef SIMULATOR_BUILD
     setArmingDisabled(ARMING_DISABLED_REBOOT_REQUIRED);
+#endif
 }
 
 bool getRebootRequired(void)
